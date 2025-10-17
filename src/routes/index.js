@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const hospedeRoutes = require('./HospedeRoutes.js');
-const reservaRoutes = require('./ReservaRoutes.js');
+import { Router } from 'express';
+import hospedeRoutes from './HospedeRoutes.js';
+import reservaRoutes from './ReservaRoutes.js';
 
 const router = Router();
 
@@ -8,7 +8,7 @@ const router = Router();
 router.use(hospedeRoutes);
 router.use(reservaRoutes);
 
-module.exports = router;
+export default router;
 
 
 

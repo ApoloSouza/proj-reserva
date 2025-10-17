@@ -1,6 +1,5 @@
-const { Router } = require('express');
-const HospedeController = require('../Controllers/HospedeController.js');
-
+import { Router } from 'express';
+import HospedeController from '../Controllers/HospedeController.js';
 
 const router = Router();
 
@@ -11,4 +10,4 @@ router.post('/api/hospedes', HospedeController.store);
 router.put('/api/hospedes/:id', HospedeController.update);
 router.delete('/api/hospedes/:id', HospedeController.destroy);
 
-module.exports = router;
+export default router;

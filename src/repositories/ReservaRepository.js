@@ -1,5 +1,5 @@
-const { randomUUID } = require('node:crypto');
-const db = require('../database/conexao'); // Assumindo que seu arquivo de conexão se chama 'conexao.js'
+import { randomUUID } from 'node:crypto';
+import db from '../database/conexao.js'; // Assumindo que seu arquivo de conexão se chama 'conexao.js'
 
 class ReservaRepository {
   async findAllWithHospede() {
@@ -63,4 +63,4 @@ class ReservaRepository {
   }
 }
 
-module.exports = new ReservaRepository();
+export default new ReservaRepository();

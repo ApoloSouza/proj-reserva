@@ -1,9 +1,9 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 
 // **CORREÇÃO:** Esta linha importa o unificador de rotas e define a variável 'routes'.
 // O caminho './routes' funciona porque o 'index.js' dentro dele é carregado por padrão.
-const routes = require('./routes'); 
+import routes from './routes/index.js'; 
 
 const app = express();
 
@@ -15,4 +15,4 @@ app.use(express.json());
 // Todas as suas rotas usarão o prefixo /api
 app.use('/api', routes);
 
-module.exports = app;
+export default app;

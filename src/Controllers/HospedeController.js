@@ -1,5 +1,5 @@
-const { v4: uuidv4 } = require('uuid');
-const HospedeRepository = require('../repositories/HospedeRepository');
+import { v4 as uuidv4 } from 'uuid';
+import HospedeRepository from '../repositories/HospedeRepository.js';
 
 class HospedeController {
   /**
@@ -117,4 +117,4 @@ class HospedeController {
 }
 
 // Exporta uma instância da classe para ser usada no arquivo de rotas
-module.exports = new HospedeController();
+export default new HospedeController();

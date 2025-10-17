@@ -1,7 +1,7 @@
-const ReservaRepository = require('../repositories/ReservaRepository.js');
-const HospedeRepository = require('../repositories/HospedeRepository.js');
+import ReservaRepository from '../repositories/ReservaRepository.js';
+import HospedeRepository from '../repositories/HospedeRepository.js';
 // **CORREÇÃO:** O caminho foi ajustado para encontrar o arquivo de conexão corretamente
-const db = require('../database/conexao.js');
+import db from '../database/conexao.js';
 
 class ReservaController {
   async index(req, res) {
@@ -86,4 +86,4 @@ class ReservaController {
   }
 }
 
-module.exports = new ReservaController();
+export default new ReservaController();

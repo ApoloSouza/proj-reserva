@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const ReservaController = require('../Controllers/ReservaController.js');
+import { Router } from 'express';
+import ReservaController from '../Controllers/ReservaController.js';
 
 const router = Router();
 
@@ -10,4 +10,4 @@ router.post('/reservas', ReservaController.store);
 router.put('/reservas/:id', ReservaController.update);
 router.delete('/reservas/:id', ReservaController.destroy);
 
-module.exports = router;
+export default router;

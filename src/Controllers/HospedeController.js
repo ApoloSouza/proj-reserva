@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-import HospedeRepository from '../repositories/HospedeRepository.js';
+import { v4 as uuidv4 } from "uuid";
+import HospedeRepository from "../repositories/HospedeRepository.js";
 
 class HospedeController {
   /**
@@ -10,8 +10,8 @@ class HospedeController {
       const hospedes = await HospedeRepository.findAll();
       res.status(200).json(hospedes);
     } catch (error) {
-      console.error('Erro ao buscar hóspedes:', error);
-      res.status(500).json({ message: 'Erro ao buscar dados dos hóspedes.' });
+      console.error("Erro ao buscar hóspedes:", error);
+      res.status(500).json({ message: "Erro ao buscar dados dos hóspedes." });
     }
   }
 
@@ -22,15 +22,15 @@ class HospedeController {
     try {
       const { id } = req.params;
       const hospede = await HospedeRepository.findById(id);
-      
+
       if (hospede) {
         res.status(200).json(hospede);
       } else {
-        res.status(404).json({ message: 'Hóspede não encontrado.' });
+        res.status(404).json({ message: "Hóspede não encontrado." });
       }
     } catch (error) {
-      console.error('Erro ao buscar hóspede:', error);
-      res.status(500).json({ message: 'Erro ao buscar dados do hóspede.' });
+      console.error("Erro ao buscar hóspede:", error);
+      res.status(500).json({ message: "Erro ao buscar dados do hóspede." });
     }
   }
 
@@ -42,19 +42,22 @@ class HospedeController {
     try {
       const hospedeData = req.body;
       if (!hospedeData.nome || !hospedeData.CPF || !hospedeData.email) {
-          return res.status(400).json({ message: 'Dados essenciais do hóspede faltando.' });
+        return res
+          .status(400)
+          .json({ message: "Dados essenciais do hóspede faltando." });
       }
 
       // Garante a criação do nome completo se vier separado
-      const nomeCompleto = `${hospedeData.nome} ${hospedeData.sobrenome || ''}`.trim();
+      const nomeCompleto = `${hospedeData.nome} ${
+        hospedeData.sobrenome || ""
+      }`.trim();
       const novoHospede = { ...hospedeData, nome: nomeCompleto };
 
       const hospedeCriado = await HospedeRepository.create(novoHospede);
       res.status(201).json(hospedeCriado);
-
     } catch (error) {
-      console.error('Erro ao criar hóspede:', error);
-      res.status(500).json({ message: 'Erro ao criar o hóspede.' });
+      console.error("Erro ao criar hóspede:", error);
+      res.status(500).json({ message: "Erro ao criar o hóspede." });
     }
   }
 
@@ -67,31 +70,37 @@ class HospedeController {
       const camposParaAtualizar = req.body;
 
       if (Object.keys(camposParaAtualizar).length === 0) {
-        return res.status(400).json({ message: 'Nenhum campo fornecido para atualização.' });
+        return res
+          .status(400)
+          .json({ message: "Nenhum campo fornecido para atualização." });
       }
-      
+
       // Lógica para juntar nome e sobrenome, se eles forem enviados na atualização
       if (camposParaAtualizar.nome || camposParaAtualizar.sobrenome) {
-          const hospedeAtual = await HospedeRepository.findById(id);
-          if (!hospedeAtual) return res.status(404).json({ message: 'Hóspede não encontrado.' });
-          
-          const nome = camposParaAtualizar.nome || hospedeAtual.nome.split(' ')[0];
-          const sobrenome = camposParaAtualizar.sobrenome || hospedeAtual.nome.split(' ').slice(1).join(' ');
-          camposParaAtualizar.nome = `${nome} ${sobrenome}`.trim();
-          delete camposParaAtualizar.sobrenome; // Remove para não tentar atualizar uma coluna que não existe
+        const hospedeAtual = await HospedeRepository.findById(id);
+        if (!hospedeAtual)
+          return res.status(404).json({ message: "Hóspede não encontrado." });
+
+        const nome =
+          camposParaAtualizar.nome || hospedeAtual.nome.split(" ")[0];
+        const sobrenome =
+          camposParaAtualizar.sobrenome ||
+          hospedeAtual.nome.split(" ").slice(1).join(" ");
+        camposParaAtualizar.nome = `${nome} ${sobrenome}`.trim();
+        delete camposParaAtualizar.sobrenome; // Remove para não tentar atualizar uma coluna que não existe
       }
 
       const result = await HospedeRepository.update(id, camposParaAtualizar);
 
       if (result.affectedRows > 0) {
-        res.status(200).json({ message: 'Hóspede atualizado com sucesso!' });
+        res.status(200).json({ message: "Hóspede atualizado com sucesso!" });
       } else {
         // Se o hóspede não foi encontrado no passo anterior, o update não afeta linhas
-        res.status(404).json({ message: 'Hóspede não encontrado.' });
+        res.status(404).json({ message: "Hóspede não encontrado." });
       }
     } catch (error) {
-      console.error('Erro ao atualizar hóspede:', error);
-      res.status(500).json({ message: 'Erro ao atualizar o hóspede.' });
+      console.error("Erro ao atualizar hóspede:", error);
+      res.status(500).json({ message: "Erro ao atualizar o hóspede." });
     }
   }
 
@@ -107,11 +116,11 @@ class HospedeController {
         // Status 204 é o padrão para delete bem-sucedido, sem corpo de resposta
         res.status(204).send();
       } else {
-        res.status(404).json({ message: 'Hóspede não encontrado.' });
+        res.status(404).json({ message: "Hóspede não encontrado." });
       }
     } catch (error) {
-      console.error('Erro ao deletar hóspede:', error);
-      res.status(500).json({ message: 'Erro ao deletar o hóspede.' });
+      console.error("Erro ao deletar hóspede:", error);
+      res.status(500).json({ message: "Erro ao deletar o hóspede." });
     }
   }
 }

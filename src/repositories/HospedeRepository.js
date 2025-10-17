@@ -1,15 +1,15 @@
-import { randomUUID } from 'node:crypto';
-import db from '../database/conexao.js'; // Assumindo que seu arquivo de conexão se chama 'conexao.js'
+import { randomUUID } from "node:crypto";
+import db from "../database/conexao.js"; // Assumindo que seu arquivo de conexão se chama 'conexao.js'
 
 class HospedeRepository {
   async findAll() {
-    const sql = 'SELECT * FROM Hospede;';
+    const sql = "SELECT * FROM Hospede;";
     const [rows] = await db.execute(sql);
     return rows;
   }
 
   async findById(id) {
-    const sql = 'SELECT * FROM Hospede WHERE idHospede = ?;';
+    const sql = "SELECT * FROM Hospede WHERE idHospede = ?;";
     const [rows] = await db.execute(sql, [id]);
     return rows[0] || null;
   }
@@ -23,7 +23,7 @@ class HospedeRepository {
       VALUES (?, ?, ?, ?, ?, ?);
     `;
     const values = [newId, nome, CPF, email, dataNascimento, telefone];
-    
+
     await db.execute(sql, values);
     return { idHospede: newId, ...hospedeData };
   }
@@ -43,7 +43,7 @@ class HospedeRepository {
   }
 
   async delete(id) {
-    const sql = 'DELETE FROM Hospede WHERE idHospede = ?;';
+    const sql = "DELETE FROM Hospede WHERE idHospede = ?;";
     const [result] = await db.execute(sql, [id]);
     return { affectedRows: result.affectedRows };
   }

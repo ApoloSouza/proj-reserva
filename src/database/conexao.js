@@ -1,8 +1,8 @@
 // Carrega as variáveis de ambiente do arquivo .env
-import 'dotenv/config';
+import "dotenv/config";
 
 // Importa a biblioteca para conectar com o MySQL
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 
 // Cria um "pool" de conexões, que é uma forma eficiente de gerenciar as conexões com o banco
 const pool = mysql.createPool({
@@ -12,7 +12,7 @@ const pool = mysql.createPool({
   database: process.env.DB_DATABASE,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 // Exporta o pool para que nosso servidor principal (index.js) possa usá-lo

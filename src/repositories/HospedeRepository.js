@@ -1,4 +1,3 @@
-// **CORREÇÃO:** Usa 'require' para importar o gerador de UUID
 const { randomUUID } = require('node:crypto');
 const db = require('../database/conexao'); // Assumindo que seu arquivo de conexão se chama 'conexao.js'
 

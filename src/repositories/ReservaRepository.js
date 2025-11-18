@@ -47,7 +47,7 @@ class ReservaRepository {
       newId,
       dataEntrada,
       dataSaida,
-      status || "Pendente",
+      status || process.env.DEFAULT_RESERVATION_STATUS || "Pendente",
       idQuarto,
       idCliente,
       precoTotal,

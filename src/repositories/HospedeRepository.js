@@ -16,27 +16,28 @@ class HospedeRepository {
 
   async create(hospedeData) {
     const newId = randomUUID();
-    const { nome, CPF, email, dataNascimento, telefone } = hospedeData;
+    const { nome, sobrenome, cpf, email, dataNascimento, telefone } = hospedeData;
 
     const sql = `
-      INSERT INTO Hospede (idHospede, nome, CPF, email, dataNascimento, telefone)
+      INSERT INTO Hospede (idHospede, nome, cpf, email, dataNascimento, telefone)
       VALUES (?, ?, ?, ?, ?, ?);
     `;
-    const values = [newId, nome, CPF, email, dataNascimento, telefone];
 
+    const values = [newId, nome + ' ' + sobrenome, cpf, email, dataNascimento, telefone];
+  console.log(values);
     await db.execute(sql, values);
     return { idHospede: newId, ...hospedeData };
   }
 
   async update(id, hospedeData) {
-    const { nome, CPF, email, dataNascimento, telefone } = hospedeData;
+    const { nome, cpf, email, dataNascimento, telefone } = hospedeData;
 
     const sql = `
       UPDATE Hospede SET
-        nome = ?, CPF = ?, email = ?, dataNascimento = ?, telefone = ?
+        nome = ?, cpf = ?, email = ?, dataNascimento = ?, telefone = ?
       WHERE idHospede = ?;
     `;
-    const values = [nome, CPF, email, dataNascimento, telefone, id];
+    const values = [nome, cpf, email, dataNascimento, telefone, id];
 
     const [result] = await db.execute(sql, values);
     return { affectedRows: result.affectedRows };

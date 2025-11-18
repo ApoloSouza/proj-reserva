@@ -1,10 +1,11 @@
 // --- 1. CONFIGURAÇÃO INICIAL ---
+require('dotenv').config();
 const express = require('express');
 const db = require('./db'); // Importa a conexão com o banco
 const { v4: uuidv4 } = require('uuid'); // Importa a função para gerar IDs únicos
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3002;
 
 // Middleware para interpretar o corpo das requisições como JSON
 app.use(express.json());
@@ -12,7 +13,7 @@ app.use(express.json());
 // --- 2. DEFINIÇÃO DAS ROTAS DA API ---
 
 // Rota para LER TODAS as reservas
-app.get('/api/reservas', async (req, res) => {
+app.get('/api/reserva', async (req, res) => {
   try {
     const query = `
       SELECT r.*, h.nome, h.email 
@@ -28,7 +29,7 @@ app.get('/api/reservas', async (req, res) => {
 });
 
 // Rota para LER UMA reserva específica pelo ID
-app.get('/api/reservas/:id', async (req, res) => {
+app.get('/api/reserva/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const query = `
@@ -51,7 +52,7 @@ app.get('/api/reservas/:id', async (req, res) => {
 });
 
 // Rota para CRIAR uma nova reserva
-app.post('/api/reservas', async (req, res) => {
+app.post('/api/reserva', async (req, res) => {
   let connection;
   try {
     const { reserva, hospede } = req.body;
@@ -80,7 +81,7 @@ app.post('/api/reservas', async (req, res) => {
       idReserva,
       reserva.dataEntrada,
       reserva.dataSaida,
-      'Pendente',
+      process.env.DEFAULT_RESERVATION_STATUS || 'Pendente',
       reserva.idQuarto,
       reserva.idCliente,
       reserva.precoTotal,
@@ -106,7 +107,7 @@ app.post('/api/reservas', async (req, res) => {
 });
 
 // Rota para ATUALIZAR uma reserva existente
-app.put('/api/reservas/:id', async (req, res) => {
+app.put('/api/reserva/:id', async (req, res) => {
   try {
     const { id } = req.params; // Pega o ID da reserva a ser atualizada
     const camposParaAtualizar = req.body; // Pega os dados enviados no corpo da requisição
@@ -147,7 +148,7 @@ app.put('/api/reservas/:id', async (req, res) => {
 });
 
 // Rota para ATUALIZAR um hóspede existente
-app.put('/api/hospedes/:id', async (req, res) => {
+app.put('/api/hospede/:id', async (req, res) => {
   try {
     const { id } = req.params; // Pega o ID do hóspede a ser atualizado
     const camposParaAtualizar = req.body; // Pega os dados enviados no corpo
@@ -183,7 +184,7 @@ app.put('/api/hospedes/:id', async (req, res) => {
 });
 
 // Rota para DELETAR uma reserva existente
-app.delete('/api/reservas/:id', async (req, res) => {
+app.delete('/api/reserva/:id', async (req, res) => {
   try {
     const { id } = req.params; // Pega o ID da reserva a ser deletada
 
@@ -209,7 +210,7 @@ app.delete('/api/reservas/:id', async (req, res) => {
 });
 
 // Rota para buscar quartos ocupados em um período
-app.get('/api/reservas/quartos-ocupados', async (req, res) => {
+app.get('/api/reserva/quartos-ocupados', async (req, res) => {
   try {
     const { dataEntrada, dataSaida } = req.query;
 
@@ -247,5 +248,5 @@ app.get('/api/reservas/quartos-ocupados', async (req, res) => {
 // --- 3. INICIANDO O SERVIDOR ---
 app.listen(port, () => {
   console.log(`Servidor rodando com sucesso na porta http://localhost:${port}`);
-  console.log('Use seu navegador para testar o GET: http://localhost:3000/api/reservas');
+  console.log(`Use seu navegador para testar o GET: http://localhost:${port}/api/reserva`);
 });

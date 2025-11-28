@@ -14,7 +14,7 @@ class HospedeRepository {
     return rows[0] || null;
   }
 
-  async create(hospedeData) {
+  async create(hospedeData, connection) {
     const newId = randomUUID();
     const { nome, sobrenome, cpf, email, dataNascimento, telefone } = hospedeData;
 
@@ -23,9 +23,13 @@ class HospedeRepository {
       VALUES (?, ?, ?, ?, ?, ?);
     `;
 
-    const values = [newId, nome + ' ' + sobrenome, cpf, email, dataNascimento, telefone];
-  console.log(values);
-    await db.execute(sql, values);
+    const nomeCompleto = sobrenome ? `${nome} ${sobrenome}` : nome;
+    const values = [newId, nomeCompleto, cpf, email, dataNascimento, telefone];
+    console.log('💾 Inserindo hóspede:', values);
+    
+    // Usa a conexão da transação se ela for fornecida
+    const executor = connection || db;
+    await executor.execute(sql, values);
     return { idHospede: newId, ...hospedeData };
   }
 

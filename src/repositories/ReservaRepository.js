@@ -2,6 +2,24 @@ import { randomUUID } from "node:crypto";
 import db from "../database/conexao.js"; // Assumindo que seu arquivo de conexão se chama 'conexao.js'
 
 class ReservaRepository {
+  // 🔹 NOVO: Função auxiliar para buscar dados do quarto na API de quartos
+  async fetchQuartoData(idQuarto) {
+    try {
+      const QUARTO_API_URL = process.env.QUARTO_API_URL || 'http://localhost:3003';
+      const response = await fetch(`${QUARTO_API_URL}/api/quarto/${idQuarto}`);
+      
+      if (!response.ok) {
+        console.warn(`Não foi possível buscar dados do quarto ${idQuarto}`);
+        return null;
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Erro ao buscar dados do quarto ${idQuarto}:`, error);
+      return null;
+    }
+  }
+
   async findAllWithHospede() {
     const sql = `
       SELECT r.*, h.nome AS nomeHospede, h.email AS emailHospede
@@ -10,6 +28,40 @@ class ReservaRepository {
     `;
     const [rows] = await db.execute(sql);
     return rows;
+  }
+
+  // 🔹 MODIFICADO: Buscar reservas por ID do cliente com informações do quarto
+  async findByClienteIdWithHospede(idCliente) {
+    const sql = `
+      SELECT r.*, h.nome AS nomeHospede, h.email AS emailHospede
+      FROM Reserva r
+      JOIN Hospede h ON r.idHospede = h.idHospede
+      WHERE r.idCliente = ?
+      ORDER BY r.dataEntrada DESC;
+    `;
+    const [rows] = await db.execute(sql, [idCliente]);
+    
+    // 🔹 NOVO: Enriquecer dados com informações do quarto
+    const reservasEnriquecidas = await Promise.all(
+      rows.map(async (reserva) => {
+        const quartoData = await this.fetchQuartoData(reserva.idQuarto);
+        
+        return {
+          ...reserva,
+          quarto: quartoData ? {
+            nome: quartoData.nome || `Quarto ${reserva.idQuarto}`,
+            tipo: quartoData.tipo || 'Standard',
+            descricao: quartoData.descricao || '',
+            capacidade: quartoData.capacidade || reserva.quantidadeHospedes,
+            precoPorNoite: quartoData.precoPorNoite || (parseFloat(reserva.precoTotal) / reserva.quantidadeDiarias),
+            imagens: quartoData.imagens || [],
+            comodidades: quartoData.comodidades || []
+          } : null
+        };
+      })
+    );
+    
+    return reservasEnriquecidas;
   }
 
   async findByIdWithHospede(id) {
